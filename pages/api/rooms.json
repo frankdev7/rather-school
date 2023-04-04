@@ -1,0 +1,12 @@
+[
+  {
+    "id": "1",
+    "name": "math",
+    "description": "math room"
+  },
+  {
+    "id": "2",
+    "name": "science",
+    "description": "science room"
+  }
+]
