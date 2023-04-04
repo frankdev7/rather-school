@@ -1,0 +1,22 @@
+[
+  {
+    "id": "1",
+    "studen1": "1",
+    "studen2":   {
+      "id": "3",
+      "name": "pedro",
+      "surname": "rojas"
+    },
+    "relationshipType": "sibling"
+  },
+  {
+    "id": "2",
+    "studen1": "1",
+    "studen2": {
+      "id": "2",
+      "name": "jorge",
+      "surname": "rojas"
+    },
+    "relationshipType": "classmate"
+  }
+]

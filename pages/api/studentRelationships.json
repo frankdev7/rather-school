@@ -1,0 +1,20 @@
+[
+  {
+    "id": "1",
+    "student":   {
+      "id": "3",
+      "name": "pedro",
+      "surname": "rojas"
+    },
+    "relationshipType": "sibling"
+  },
+  {
+    "id": "2",
+    "student": {
+      "id": "2",
+      "name": "jorge",
+      "surname": "rojas"
+    },
+    "relationshipType": "classmate"
+  }
+]

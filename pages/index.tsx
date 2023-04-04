@@ -5,7 +5,7 @@ import styles from '@/styles/Home.module.css'
 import { GetStaticPropsResult } from 'next'
 import { Room } from '@/types'
 import { getRooms } from './api/hello'
-
+import Link from 'next/link'
 const inter = Inter({ subsets: ['latin'] })
 
 interface Props {
@@ -14,13 +14,6 @@ interface Props {
 
 export default function Home({ rooms }: Props) {
 
-  const overviewHandle = (reserve: string) => {
-    router.push({
-      pathname: '/overview',
-      query: { reserve }
-    });
-  }
-  
   return (
     <>
       <Head>
@@ -30,24 +23,21 @@ export default function Home({ rooms }: Props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        <div className={styles.description}>
-          <p>
-            Get started by editing&nbsp;
-            <code className={styles.code}>pages/index.tsx</code>
-          </p>
-        </div>
+        <h1>Rooms</h1>
 
         <div className={styles.grid}>
           {
             rooms.map((room) => {
               return (
                 <div key={room.id}>
-                  <h2 className={inter.className}>
-                    {room.name}
-                  </h2>
-                  <p className={inter.className}>
-                    {room.description}
-                  </p>
+                  <Link href={{ pathname: "/room/[id]", query: { id: room.id, name: room.name, description: room.description } }}>
+                    <h2 className={inter.className}>
+                      {room.name}
+                    </h2>
+                    <p className={inter.className}>
+                      {room.description}
+                    </p>
+                  </Link>
                 </div>
               )
             })
