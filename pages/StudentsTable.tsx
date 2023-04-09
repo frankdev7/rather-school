@@ -17,7 +17,7 @@ export default function StudentsTable() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [studentsRoom, setStudentsRoom] = useState<StudentRoom[]>();
   const [rooms, setRooms] = useState<Room[]>([]);
-  const [room, setRoom] = useState<string>();
+  const [room, setRoom] = useState<string>("");
   const [editingStudentRoom, setEditingStudentRoom] = useState<StudentRoom>(null);
   const [action, setAction] = useState<string>("");
 
@@ -55,7 +55,8 @@ export default function StudentsTable() {
 
   const handleOpenAddModal = () => {
     setAction(SAVE);
-    // setEditingStudentRoom({ id: '', name: '', description: '' });
+    setRoom(rooms[0].id)
+    setEditingStudentRoom({ id: '', student: { id: '', name: '', surname: '' }, room: { id: room, name: '', description: '' } });
   }
 
   const handleOpenEditStudentRoomModal = (studentRoom: StudentRoom) => {
@@ -69,40 +70,44 @@ export default function StudentsTable() {
     setEditingStudentRoom(null);
   };
 
-
   const handleRoomChange = (event: SelectChangeEvent) => {
-    console.log(event.target.value)
     setRoom(event.target.value);
   };
 
   const handleEdit = async (editedStudentRoom: StudentRoom) => {
-    await axios.put("/api/editstudent?id=" + editedStudentRoom.id, {
+    await axios.put("/api/student/edit?id=" + editedStudentRoom.id, {
       student: editedStudentRoom.student,
       roomId: room
     });
+    const roomIndex = rooms.findIndex(roomItem => roomItem.id === room)
     handleCloseRoomModal();
-    setStudentsRoom(prevStudentsRoom => prevStudentsRoom.map(studentsRoom => {
-      if (studentsRoom.id === editedStudentRoom.id) {
-        return {
-          id: studentsRoom.id,
-          student: editedStudentRoom.student,
-          room: {
-            ...room,
-            id: room
-          }
-        };
-      } else {
-        return studentsRoom;
-      }
-    }));
+    setStudentsRoom(prevStudentsRoom =>
+      prevStudentsRoom.map(studentsRoom => {
+        if (studentsRoom.id === editedStudentRoom.id) {
+          return {
+            id: studentsRoom.id,
+            student: editedStudentRoom.student,
+            room: rooms[roomIndex]
+          };
+        } else {
+          return studentsRoom;
+        }
+      }));
   }
 
-  // const handleSave = async (newRoom: Room) => {
-  //   newRoom.id = uuidv4();
-  //   await axios.post("/api/addroom", newRoom);
-  //   handleCloseRoomModal();
-  //   setRooms(prevRooms => [...prevRooms, newRoom]);
-  // }
+  const handleSave = async (newStudentRoom: StudentRoom) => {
+    newStudentRoom.id = uuidv4();
+    newStudentRoom.student.id = uuidv4();
+
+    await axios.post("/api/student/add", {
+      id: newStudentRoom.id,
+      student: newStudentRoom.student,
+      roomId: room
+    });
+    console.log(newStudentRoom)
+    handleCloseRoomModal();
+    // setStudentsRoom(prevStudentsRoom => [...prevStudentsRoom, newRoom]);
+  }
 
   const handleDelete = async (studentId: string, studentRoomRelationshipId: string) => {
     await axios.delete("/api/deleteroom?id=" + studentId);
@@ -197,14 +202,17 @@ export default function StudentsTable() {
         rooms={rooms}
         handleRoomChange={handleRoomChange}
       />
-      {/* <RoomModal
-        title="Add Room"
+      <StudentModal
+        title="Add Student"
         open={action === SAVE}
-        editingRoom={editingRoom}
-        setEditingRoom={setEditingRoom}
+        editingStudentRoom={editingStudentRoom}
+        setEditingStudentRoom={setEditingStudentRoom}
         handleCloseRoomModal={handleCloseRoomModal}
         handleSave={handleSave}
-      /> */}
+        room={room}
+        rooms={rooms}
+        handleRoomChange={handleRoomChange}
+      />
     </Container>
   );
 }

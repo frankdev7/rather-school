@@ -11,7 +11,6 @@ interface Props {
 }
 
 export function RoomModal({ title, open, editingRoom, handleCloseRoomModal, setEditingRoom, handleSave }: Props) {
-  console.log("HI");
   return (
     <>
       <Modal

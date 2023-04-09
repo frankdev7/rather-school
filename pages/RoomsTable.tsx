@@ -57,7 +57,7 @@ export default function RoomsTable() {
   };
 
   const handleEdit = async (editedRoom: Room) => {
-    await axios.put("/api/editroom?id=" + editedRoom.id, editedRoom);
+    await axios.put("/api/room/edit?id=" + editedRoom.id, editedRoom);
     handleCloseRoomModal();
     setRooms(prevRooms => prevRooms.map(room => {
       if (room.id === editedRoom.id) {
@@ -70,13 +70,13 @@ export default function RoomsTable() {
 
   const handleSave = async (newRoom: Room) => {
     newRoom.id = uuidv4();
-    await axios.post("/api/addroom", newRoom);
+    await axios.post("/api/room/add", newRoom);
     handleCloseRoomModal();
     setRooms(prevRooms => [...prevRooms, newRoom]);
   }
 
   const handleDelete = async (id: string) => {
-    await axios.delete("/api/deleteroom?id=" + id);
+    await axios.delete("/api/room/delete?id=" + id);
     handleCloseRoomModal();
     setRooms(prevRooms =>
       prevRooms.filter(room => room.id !== id)

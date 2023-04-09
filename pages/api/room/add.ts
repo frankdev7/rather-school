@@ -1,9 +1,10 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getRoomsTable } from './utils'
+import { getRoomsTable } from '../utils'
 import { Room } from '@/types';
 import fs from 'fs'
 import path from 'path';
+import { RoomTableJSON } from '../constants';
 
 export default async function handler(
   req: NextApiRequest,
@@ -14,7 +15,7 @@ export default async function handler(
     const room = { id, name, description };
     const rooms: Room[] = await getRoomsTable();
     rooms.push(room)
-    const filePath = path.join(process.cwd(), 'pages/api/mocks', 'rooms.json');
+    const filePath = path.join(process.cwd(), 'pages/api/mocks', RoomTableJSON);
     fs.writeFileSync(filePath, JSON.stringify(rooms))
     res.status(200).json(room)
   } else {

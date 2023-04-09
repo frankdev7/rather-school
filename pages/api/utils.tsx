@@ -22,6 +22,21 @@ export const getRoomsTable = async (): Promise<
   return rooms;
 };
 
+export const getStudentTable = async (): Promise<
+  Student[]
+> => {
+  let students: Student[] = [];
+  StudentTableJSON.forEach(student => {
+    students.push({
+      id: student.id,
+      name: student.name,
+      surname: student.surname
+    })
+  });
+
+  return students;
+};
+
 export const getStudentRoomTable = async (): Promise<
   StudentRoomTable[]
 > => {

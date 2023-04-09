@@ -34,8 +34,6 @@ export default function Admin() {
 
 export const getStaticProps: GetStaticProps<Props> = async (): Promise<GetStaticPropsResult<Props>> => {
   // const rooms = await getRooms();
-  // console.log(rooms)
-
   return {
     props: {
     }
