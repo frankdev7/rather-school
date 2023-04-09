@@ -1,20 +1,15 @@
-[
-  {
-    "id": "1",
-    "student": {
+{
+  "roomId": "7db0d3c8-596c-4d30-8ecd-fdf24a21ef03",
+  "students": [
+    {
       "id": "1",
       "name": "frank",
       "surname": "rojas"
     },
-    "room": "1"
-  },
-  {
-    "id": "2",
-    "student": {
+    {
       "id": "2",
       "name": "jorge",
       "surname": "rojas"
-    },
-    "room": "2"
-  }
-]
+    }
+  ]
+}
