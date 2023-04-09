@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getRooms, getStudentsByRoom } from './utils'
+import { getStudentsByRoom } from './utils'
 import { Room, Student, StudentsByRoom } from '@/types';
 
 export default async function handler(

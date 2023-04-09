@@ -10,7 +10,7 @@ import BasicCard from './components/BasicCard'
 import { Box, Container, Grid, Typography } from '@mui/material'
 import PageTitle from './components/PageTitle'
 import axios from 'axios'
-import { getRooms } from './api/utils'
+import { getRoomsTable } from './api/utils'
 const inter = Inter({ subsets: ['latin'] })
 
 interface Props {
@@ -38,7 +38,7 @@ export default function Index({ rooms }: Props) {
                 return (
                   <Grid item key={room.id} xs={12} sm={6} md={4}>
                     <Link href={{ pathname: "/room/[id]", query: { id: room.id, name: room.name, description: room.description } }}>
-                      <BasicCard id={room.id} title={room.name} description={room.description} textButton="Get Students"/>
+                      <BasicCard id={room.id} title={room.name} description={room.description} textButton="Get Students" />
                     </Link>
                   </Grid>
                 )
@@ -53,7 +53,7 @@ export default function Index({ rooms }: Props) {
 }
 
 export const getStaticProps: GetStaticProps<Props> = async (): Promise<GetStaticPropsResult<Props>> => {
-  const rooms = await getRooms();
+  const rooms = await getRoomsTable();
   console.log(rooms)
 
   return {

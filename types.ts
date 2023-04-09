@@ -10,6 +10,13 @@ export interface StudentRoomTable {
   roomId: string;
 }
 
+export interface StudentRelationshipTable {
+  id: string;
+  student1Id: string;
+  student2Id: string;
+  relationshipType: string;
+}
+
 export interface StudentRoom {
   id: string;
   student: Student;

@@ -2,14 +2,14 @@ import Head from 'next/head'
 import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
 import { GetStaticProps, GetStaticPropsContext, GetStaticPropsResult } from 'next'
-import { Room, RoomStudents, Student, StudentRelationship } from '@/types'
-import { getStudentsFromRoom } from '../api/hello'
+import { Room, RoomStudents, Student, StudentRelationship, StudentsByRoom } from '@/types'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import Navbar from '../components/Navbar'
 import PageTitle from '../components/PageTitle'
 import { Container, Grid } from '@mui/material'
 import BasicCard from '../components/BasicCard'
+import { getStudentsByRoom } from '../api/utils'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -41,7 +41,7 @@ export default function RoomPage({ students }: Props) {
                 return (
                   <Grid item key={student.id} xs={12} sm={6} md={4}>
                     <Link href={{ pathname: "/student/[id]", query: { id: student.id, name: student.name, surname: student.surname } }}>
-                      <BasicCard id={student.id} title={student.name} description={student.surname} textButton="Get Relationships"/>
+                      <BasicCard id={student.id} title={student.name} description={student.surname} textButton="Get Relationships" />
                     </Link>
                   </Grid>
                 )
@@ -65,13 +65,11 @@ export async function getStaticPaths() {
 export const getStaticProps: GetStaticProps<Props> = async ({ params }:
   GetStaticPropsContext): Promise<GetStaticPropsResult<Props>> => {
   const { id } = params as { id: string };
-  const students: Student[] = await getStudentsFromRoom(id);
-
-  console.log(students)
-
+  const studentsByRoom: StudentsByRoom = await getStudentsByRoom(id);
+  console.log("PROPS: ", studentsByRoom)
   return {
     props: {
-      students
+      students: studentsByRoom.students
     }
   };
 }

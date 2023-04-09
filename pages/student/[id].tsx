@@ -4,7 +4,7 @@ import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
 import { GetStaticPathsContext, GetStaticProps, GetStaticPropsContext, GetStaticPropsResult } from 'next'
 import { Relationship, Room, Student, StudentRelationship } from '@/types'
-import { getRooms, getStudentRelationships } from '../api/hello'
+import { getStudentRelationships } from '../api/utils'
 import { useRouter } from 'next/router'
 import PageTitle from '../components/PageTitle'
 import { Description } from '@mui/icons-material'
@@ -67,11 +67,7 @@ export async function getStaticPaths() {
 
 export const getStaticProps: GetStaticProps<Props> = async ({ params }: GetStaticPropsContext): Promise<GetStaticPropsResult<Props>> => {
   const { id } = params as { id: string };
-
   const relationships: Relationship[] = await getStudentRelationships(id);
-
-  console.log(relationships)
-
   return {
     props: {
       relationships
