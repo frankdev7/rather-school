@@ -15,12 +15,5 @@
     "plugins": [
         "react"
     ],
-    "rules": {
-        "object-curly-newline": [
-            "error",
-            {
-                "multiline": true
-            }
-        ]
-    }
+    "rules": {}
 }
