@@ -1,13 +1,13 @@
-import { Box, Button, Container, Modal, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TextField, Typography } from "@mui/material";
+import { Button, Container, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import { Room, RoomColumn } from "@/types";
 import axios from "axios";
-import { RoomModal } from "./RoomModal";
+import { RoomModal } from "../../modal/room/RoomModal";
 import { v4 as uuidv4 } from 'uuid';
-import { EDIT, SAVE } from "./util";
+import { EDIT, SAVE } from "../../../util";
 
 export default function RoomsTable() {
 
@@ -117,14 +117,15 @@ export default function RoomsTable() {
                   .map((room, i) => {
                     return (
                       <TableRow hover role="checkbox" tabIndex={-1} key={room.id}>
-                        {columns.map((column) => {
-                          const value = room[column.id];
-                          return (
-                            <TableCell key={column.id} align={column.align}>
-                              {value}
-                            </TableCell>
-                          );
-                        })}
+                        <TableCell align="left">
+                          {i + 1}
+                        </TableCell>
+                        <TableCell align="left">
+                          {room.name}
+                        </TableCell>
+                        <TableCell align="left">
+                          {room.description}
+                        </TableCell>
                         <TableCell>
                           <Button variant="outlined" startIcon={<EditIcon />} onClick={() => handleOpenEditRoomModal(room)}>
                             Edit

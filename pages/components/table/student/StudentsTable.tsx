@@ -1,15 +1,13 @@
-import { Box, Button, Container, Modal, Paper, SelectChangeEvent, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TextField, Typography } from "@mui/material";
+import { Button, Container, Modal, Paper, SelectChangeEvent, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
-import { Room, RoomColumn, Student, StudentRoom, StudentRoomColumn, StudentRoomDetail } from "@/types";
+import { Room, StudentRoom, StudentRoomColumn } from "@/types";
 import axios from "axios";
-import { RoomModal } from "./RoomModal";
 import { v4 as uuidv4 } from 'uuid';
-import { EDIT, SAVE } from "./util";
-import { getStudentsByRoom } from "./api/utils";
-import { StudentModal } from "./StudentModal";
+import { EDIT, SAVE } from "../../../util";
+import { StudentModal } from "../../modal/student/StudentModal";
 
 export default function StudentsTable() {
 
@@ -34,7 +32,8 @@ export default function StudentsTable() {
   }, []);
 
   const getStudentsByRoom = async () => {
-    const studentsRoomRs: StudentRoom[] = (await axios.get("/api/allstudents")).data;
+    const response = await axios.get("/api/allstudents");
+    const studentsRoomRs: StudentRoom[] = response.data;
     setStudentsRoom(studentsRoomRs);
   }
 
@@ -95,6 +94,7 @@ export default function StudentsTable() {
       }));
   }
 
+
   const handleSave = async (newStudentRoom: StudentRoom) => {
     newStudentRoom.id = uuidv4();
     newStudentRoom.student.id = uuidv4();
@@ -104,18 +104,19 @@ export default function StudentsTable() {
       student: newStudentRoom.student,
       roomId: room
     });
-    console.log(newStudentRoom)
+
     handleCloseRoomModal();
-    // setStudentsRoom(prevStudentsRoom => [...prevStudentsRoom, newRoom]);
+    const roomFound: Room = rooms.find(roomItem => roomItem.id === room)
+    setStudentsRoom(prevStudentsRoom => [...prevStudentsRoom, { id: newStudentRoom.id, student: newStudentRoom.student, room: roomFound }])
   }
 
-  const handleDelete = async (studentId: string, studentRoomRelationshipId: string) => {
-    await axios.delete("/api/deleteroom?id=" + studentId);
-    await axios.delete("/api/deleteroom?id=" + studentRoomRelationshipId);
+
+  const handleDelete = async (studentId: string) => {
+    await axios.delete("/api/student/delete?id=" + studentId);
     handleCloseRoomModal();
-    // setRooms(prevRooms =>
-    //   prevRooms.filter(room => room.id !== id)
-    // );
+    setStudentsRoom(prevStudentsRoom =>
+      prevStudentsRoom.filter(studentRoom => studentRoom.student.id !== studentId)
+    );
   }
 
   return (

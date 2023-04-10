@@ -17,8 +17,8 @@ export default function Navbar() {
             </Link>
           </Typography>
           <Button color="inherit">
-            <Link href="/signin" color="inherit">
-              Login
+            <Link href="/admin" color="inherit">
+              Admin
             </Link>
           </Button>
         </Toolbar>

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
@@ -12,7 +11,7 @@ export default function Footer() {
         color="text.secondary"
         component="p"
       >
-        rather labs reserverd @ rights
+        rather labs @ reserverd rights
       </Typography>
     </Box>
   );

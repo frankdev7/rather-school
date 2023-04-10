@@ -4,8 +4,6 @@ import * as RoomTableJSON from './mocks/RoomTable.json';
 import * as StudentTableJSON from './mocks/StudentTable.json';
 import * as StudentRoomTableJSON from './mocks/StudentRoomTable.json';
 import * as StudentRelationshipTableJSON from './mocks/StudentRelationshipTable.json';
-import * as StudentsByRoomJSON from './mocks/studentsByRoom.json';
-import * as StudentRoomsResponseJSON from './mocks/studentRoomsResponse.json';
 
 export const getRoomsTable = async (): Promise<
   Room[]
@@ -50,6 +48,22 @@ export const getStudentRoomTable = async (): Promise<
   });
 
   return studentsRoom;
+};
+
+export const getStudentRelationshipTable = async (): Promise<
+  StudentRelationshipTable[]
+> => {
+  let studentRelationshipTable: StudentRelationshipTable[] = [];
+  StudentRelationshipTableJSON.forEach(studentRelationship => {
+    studentRelationshipTable.push({
+      id: studentRelationship.id,
+      student1Id: studentRelationship.student1Id,
+      student2Id: studentRelationship.student2Id,
+      relationshipType: studentRelationship.relationshipType
+    })
+  });
+
+  return studentRelationshipTable;
 };
 
 export const getStudents = async (): Promise<
