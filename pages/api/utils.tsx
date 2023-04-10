@@ -92,7 +92,6 @@ export const getStudentRelationships = async (studentId: string): Promise<Relati
   const studentRelationships: StudentRelationshipTable[] = StudentRelationshipTableJSON.filter(
     studentRelationship => studentRelationship.student1Id === studentId);
 
-  console.log("studentRelationships", studentRelationships)
   studentRelationships.forEach(studentRelationship => {
     const studentFound = StudentTableJSON.find(student => studentRelationship.student2Id === student.id);
     relationships.push({

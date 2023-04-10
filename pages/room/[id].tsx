@@ -64,7 +64,6 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }:
   GetStaticPropsContext): Promise<GetStaticPropsResult<Props>> => {
   const { id } = params as { id: string };
   const studentsByRoom: StudentsByRoom = await getStudentsByRoom(id);
-  console.log("PROPS: ", studentsByRoom)
   return {
     props: {
       students: studentsByRoom.students
