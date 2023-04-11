@@ -13,8 +13,8 @@ export default function RoomsTable() {
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [rooms, setRooms] = useState<Room[]>();
-  const [editingRoom, setEditingRoom] = useState<Room>(null);
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const [editingRoom, setEditingRoom] = useState<Room | null>(null);
   const [action, setAction] = useState<string>("");
 
   const columns: readonly RoomColumn[] = [

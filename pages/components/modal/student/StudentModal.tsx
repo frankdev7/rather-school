@@ -4,7 +4,7 @@ import { Box, Button, FormControl, InputLabel, MenuItem, Modal, Select, SelectCh
 interface Props {
   title: string;
   open: boolean;
-  editingStudentRoom: StudentRoom;
+  editingStudentRoom: StudentRoom | null;
   setEditingStudentRoom: (studentRoom: StudentRoom) => void;
   handleCloseRoomModal: () => void;
   handleSave: (room: any) => Promise<void>;
@@ -38,14 +38,20 @@ export function StudentModal({
           <TextField
             label="Name"
             value={editingStudentRoom?.student.name || ''}
-            onChange={(event) => setEditingStudentRoom({ ...editingStudentRoom, student: { ...editingStudentRoom.student, name: event.target.value } })}
+            onChange={(event) => {
+              if (editingStudentRoom)
+                setEditingStudentRoom({ ...editingStudentRoom, student: { ...editingStudentRoom.student, name: event.target.value } })
+            }}
             fullWidth
             margin="normal"
           />
           <TextField
             label="Surname"
             value={editingStudentRoom?.student.surname || ''}
-            onChange={(event) => setEditingStudentRoom({ ...editingStudentRoom, student: { ...editingStudentRoom.student, surname: event.target.value } })}
+            onChange={(event) => {
+              if (editingStudentRoom)
+                setEditingStudentRoom({ ...editingStudentRoom, student: { ...editingStudentRoom.student, surname: event.target.value } })
+            }}
             fullWidth
             margin="normal"
           />

@@ -4,7 +4,7 @@ import { Box, Button, Modal, TextField, Typography } from "@mui/material";
 interface Props {
   title: string;
   open: boolean;
-  editingRoom: Room;
+  editingRoom: Room | null;
   setEditingRoom: (room: Room) => void;
   handleCloseRoomModal: () => void;
   handleSave: (room: Room) => Promise<void>;
@@ -24,28 +24,33 @@ export function RoomModal({ title, open, editingRoom, handleCloseRoomModal, setE
           <TextField
             label="Name"
             value={editingRoom?.name || ''}
-            onChange={(event) => setEditingRoom({ ...editingRoom, name: event.target.value })}
+            onChange={(event) => {
+              if (editingRoom)
+                setEditingRoom({ ...editingRoom, name: event.target.value })
+            }}
             fullWidth
             margin="normal"
           />
           <TextField
             label="Description"
             value={editingRoom?.description || ''}
-            onChange={(event) => setEditingRoom({ ...editingRoom, description: event.target.value })}
+            onChange={(event) => {
+              if (editingRoom)
+                setEditingRoom({ ...editingRoom, description: event.target.value })
+            }}
             fullWidth
             margin="normal"
           />
-
-          {/* <Button variant="contained" component="label" sx={{ mb: 2 }}>
-            Profile Image
-            <input hidden accept="image/*" multiple type="file" />
-          </Button> */}
-
           <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Button variant="contained" onClick={handleCloseRoomModal} sx={{ mr: 2 }}>
               Cancel
             </Button>
-            <Button variant="contained" color="primary" onClick={() => handleSave(editingRoom)} disabled={!editingRoom?.name || !editingRoom?.description}>
+            <Button variant="contained" color="primary" onClick={
+              () => {
+                if (editingRoom)
+                  handleSave(editingRoom)
+              }}
+              disabled={!editingRoom?.name || !editingRoom?.description}>
               Save
             </Button>
           </Box>

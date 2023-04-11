@@ -13,10 +13,10 @@ export default function StudentsTable() {
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [studentsRoom, setStudentsRoom] = useState<StudentRoom[]>();
+  const [studentsRoom, setStudentsRoom] = useState<StudentRoom[]>([]);
   const [rooms, setRooms] = useState<Room[]>([]);
   const [room, setRoom] = useState<string>("");
-  const [editingStudentRoom, setEditingStudentRoom] = useState<StudentRoom>(null);
+  const [editingStudentRoom, setEditingStudentRoom] = useState<StudentRoom | null>(null);
   const [action, setAction] = useState<string>("");
 
   const columns: readonly StudentRoomColumn[] = [
@@ -106,8 +106,11 @@ export default function StudentsTable() {
     });
 
     handleCloseRoomModal();
-    const roomFound: Room = rooms.find(roomItem => roomItem.id === room)
-    setStudentsRoom(prevStudentsRoom => [...prevStudentsRoom, { id: newStudentRoom.id, student: newStudentRoom.student, room: roomFound }])
+    const roomFound: Room | undefined = rooms.find(roomItem => roomItem.id === room)
+    if (roomFound)
+      setStudentsRoom(prevStudentsRoom =>
+        [...prevStudentsRoom, { id: newStudentRoom.id, student: newStudentRoom.student, room: roomFound }]
+      )
   }
 
 
@@ -116,6 +119,7 @@ export default function StudentsTable() {
     handleCloseRoomModal();
     setStudentsRoom(prevStudentsRoom =>
       prevStudentsRoom.filter(studentRoom => studentRoom.student.id !== studentId)
+
     );
   }
 
@@ -171,7 +175,7 @@ export default function StudentsTable() {
                           </Button>
                         </TableCell>
                         <TableCell>
-                          <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => handleDelete(studentRoom.student.id, studentRoom.id)}>
+                          <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => handleDelete(studentRoom.student.id)}>
                             Delete
                           </Button>
                         </TableCell>

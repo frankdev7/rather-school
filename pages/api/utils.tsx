@@ -93,12 +93,14 @@ export const getStudentRelationships = async (studentId: string): Promise<Relati
     studentRelationship => studentRelationship.student1Id === studentId);
 
   studentRelationships.forEach(studentRelationship => {
-    const studentFound = StudentTableJSON.find(student => studentRelationship.student2Id === student.id);
-    relationships.push({
-      id: studentRelationship.id,
-      student: studentFound,
-      relationshipType: studentRelationship.relationshipType
-    });
+    const studentFound: Student | undefined = StudentTableJSON.find(student => studentRelationship.student2Id === student.id);
+    if (studentFound) {
+      relationships.push({
+        id: studentRelationship.id,
+        student: studentFound,
+        relationshipType: studentRelationship.relationshipType
+      });
+    }
   });
 
   return relationships;
@@ -106,7 +108,7 @@ export const getStudentRelationships = async (studentId: string): Promise<Relati
 
 export const getStudentsByRoom = async (roomId: string): Promise<StudentsByRoom> => {
 
-  const studentsRoom: StudentsByRoom[] = StudentRoomTableJSON.filter(studentRoom => studentRoom.roomId === roomId);
+  const studentsRoom: StudentRoomTable[] = StudentRoomTableJSON.filter(studentRoom => studentRoom.roomId === roomId);
   let students: Student[] = [];
   studentsRoom.forEach(studentRoom => {
     const studentFound = StudentTableJSON.find(student => studentRoom.studentId === student.id);
@@ -119,7 +121,3 @@ export const getStudentsByRoom = async (roomId: string): Promise<StudentsByRoom>
     students: students
   };
 };
-
-const getStudent = async (studentId: string): Promise<Student> => {
-  return StudentTableJSON.find(student => student.id === studentId);
-}
