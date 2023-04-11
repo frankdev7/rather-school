@@ -8,7 +8,7 @@ import Navbar from '../components/navbar/Navbar'
 import { Container, Grid } from '@mui/material'
 import BasicCard from '../components/BasicCard'
 import { createTheme, ThemeProvider, } from '@mui/material/styles';
-import { ratherThemeOptions } from '../theme/ratherThemeOptions';
+import { ratherThemeOptions } from '../../ratherThemeOptions';
 
 const theme = createTheme(ratherThemeOptions);
 

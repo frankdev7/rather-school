@@ -6,8 +6,8 @@ import AddIcon from '@mui/icons-material/Add';
 import { Room, StudentRoom, StudentRoomColumn } from "@/types";
 import axios from "axios";
 import { v4 as uuidv4 } from 'uuid';
-import { EDIT, SAVE } from "../../../util";
-import { StudentModal } from "../../modal/student/StudentModal";
+import Constants from "../../../../util";
+import StudentModal from "../../modal/student/StudentModal";
 
 export default function StudentsTable() {
 
@@ -53,13 +53,13 @@ export default function StudentsTable() {
   };
 
   const handleOpenAddModal = () => {
-    setAction(SAVE);
+    setAction(Constants.SAVE);
     setRoom(rooms[0].id)
     setEditingStudentRoom({ id: '', student: { id: '', name: '', surname: '' }, room: { id: room, name: '', description: '' } });
   }
 
   const handleOpenEditStudentRoomModal = (studentRoom: StudentRoom) => {
-    setAction(EDIT);
+    setAction(Constants.EDIT);
     setEditingStudentRoom(studentRoom);
     setRoom(studentRoom.room.id)
   };
@@ -198,7 +198,7 @@ export default function StudentsTable() {
       }
       <StudentModal
         title="Edit Student"
-        open={action === EDIT}
+        open={action === Constants.EDIT}
         editingStudentRoom={editingStudentRoom}
         setEditingStudentRoom={setEditingStudentRoom}
         handleCloseRoomModal={handleCloseRoomModal}
@@ -209,7 +209,7 @@ export default function StudentsTable() {
       />
       <StudentModal
         title="Add Student"
-        open={action === SAVE}
+        open={action === Constants.SAVE}
         editingStudentRoom={editingStudentRoom}
         setEditingStudentRoom={setEditingStudentRoom}
         handleCloseRoomModal={handleCloseRoomModal}

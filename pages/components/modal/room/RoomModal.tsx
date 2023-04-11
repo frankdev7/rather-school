@@ -10,7 +10,7 @@ interface Props {
   handleSave: (room: Room) => Promise<void>;
 }
 
-export function RoomModal({ title, open, editingRoom, handleCloseRoomModal, setEditingRoom, handleSave }: Props) {
+export default function RoomModal({ title, open, editingRoom, handleCloseRoomModal, setEditingRoom, handleSave }: Props) {
   return (
     <>
       <Modal

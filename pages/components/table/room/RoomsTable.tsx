@@ -5,9 +5,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import { Room, RoomColumn } from "@/types";
 import axios from "axios";
-import { RoomModal } from "../../modal/room/RoomModal";
+import RoomModal from "../../modal/room/RoomModal";
 import { v4 as uuidv4 } from 'uuid';
-import { EDIT, SAVE } from "../../../util";
+import Constants from "../../../../util";
 
 export default function RoomsTable() {
 
@@ -42,12 +42,12 @@ export default function RoomsTable() {
   };
 
   const handleOpenAddModal = () => {
-    setAction(SAVE);
+    setAction(Constants.SAVE);
     setEditingRoom({ id: '', name: '', description: '' });
   }
 
   const handleOpenEditRoomModal = (room: Room) => {
-    setAction(EDIT);
+    setAction(Constants.EDIT);
     setEditingRoom(room);
   };
 
@@ -155,7 +155,7 @@ export default function RoomsTable() {
       }
       <RoomModal
         title="Edit Room"
-        open={action === EDIT}
+        open={action === Constants.EDIT}
         editingRoom={editingRoom}
         setEditingRoom={setEditingRoom}
         handleCloseRoomModal={handleCloseRoomModal}
@@ -163,7 +163,7 @@ export default function RoomsTable() {
       />
       <RoomModal
         title="Add Room"
-        open={action === SAVE}
+        open={action === Constants.SAVE}
         editingRoom={editingRoom}
         setEditingRoom={setEditingRoom}
         handleCloseRoomModal={handleCloseRoomModal}

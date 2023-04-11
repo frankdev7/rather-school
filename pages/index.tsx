@@ -9,7 +9,7 @@ import { Container, Grid } from '@mui/material'
 import PageTitle from './components/PageTitle'
 import { getRoomsTable } from './api/utils'
 import { createTheme, ThemeProvider, } from '@mui/material/styles'
-import { ratherThemeOptions } from './theme/ratherThemeOptions'
+import { ratherThemeOptions } from '../ratherThemeOptions'
 
 const theme = createTheme(ratherThemeOptions);
 

@@ -1,9 +1,9 @@
 import { StudentRelationshipTable, Relationship, Room, RoomStudents, Student, StudentsByRoom, StudentRelationship, StudentRoomTable, StudentRoom } from '@/types';
 import type { NextApiRequest, NextApiResponse } from 'next'
-import * as RoomTableJSON from './mocks/RoomTable.json';
-import * as StudentTableJSON from './mocks/StudentTable.json';
-import * as StudentRoomTableJSON from './mocks/StudentRoomTable.json';
-import * as StudentRelationshipTableJSON from './mocks/StudentRelationshipTable.json';
+import RoomTableJSON from './mocks/RoomTable.json';
+import StudentTableJSON from './mocks/StudentTable.json';
+import StudentRoomTableJSON from './mocks/StudentRoomTable.json';
+import StudentRelationshipTableJSON from './mocks/StudentRelationshipTable.json';
 
 export const getRoomsTable = async (): Promise<
   Room[]

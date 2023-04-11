@@ -13,7 +13,7 @@ interface Props {
   handleRoomChange: (event: SelectChangeEvent) => void;
 }
 
-export function StudentModal({
+export default function StudentModal({
   title,
   open,
   editingStudentRoom,

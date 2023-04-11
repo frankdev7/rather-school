@@ -4,7 +4,7 @@ import Navbar from './components/navbar/Navbar'
 import RoomsTable from './components/table/room/RoomsTable'
 import StudentsTable from './components/table/student/StudentsTable'
 import { createTheme, ThemeProvider, } from '@mui/material/styles'
-import { ratherThemeOptions } from './theme/ratherThemeOptions'
+import { ratherThemeOptions } from '../ratherThemeOptions'
 
 const theme = createTheme(ratherThemeOptions);
 
