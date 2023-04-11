@@ -9,7 +9,9 @@ export const getRoomsTable = async (): Promise<
   Room[]
 > => {
   let rooms: Room[] = [];
-  RoomTableJSON.forEach(room => {
+  const roomTableJSON: Room[] = RoomTableJSON;
+
+  roomTableJSON.forEach(room => {
     rooms.push({
       id: room.id,
       name: room.name,
@@ -24,7 +26,9 @@ export const getStudentTable = async (): Promise<
   Student[]
 > => {
   let students: Student[] = [];
-  StudentTableJSON.forEach(student => {
+  const studentTableJSON: Student[] = StudentTableJSON;
+
+  studentTableJSON.forEach(student => {
     students.push({
       id: student.id,
       name: student.name,
@@ -39,7 +43,9 @@ export const getStudentRoomTable = async (): Promise<
   StudentRoomTable[]
 > => {
   let studentsRoom: StudentRoomTable[] = [];
-  StudentRoomTableJSON.forEach(studentRoom => {
+  const studentRoomTableJSON: StudentRoomTable[] = StudentRoomTableJSON;
+
+  studentRoomTableJSON.forEach(studentRoom => {
     studentsRoom.push({
       id: studentRoom.id,
       studentId: studentRoom.studentId,
@@ -54,7 +60,9 @@ export const getStudentRelationshipTable = async (): Promise<
   StudentRelationshipTable[]
 > => {
   let studentRelationshipTable: StudentRelationshipTable[] = [];
-  StudentRelationshipTableJSON.forEach(studentRelationship => {
+  const studentRelationshipTableJSON: StudentRelationshipTable[] = StudentRelationshipTableJSON;
+
+  studentRelationshipTableJSON.forEach(studentRelationship => {
     studentRelationshipTable.push({
       id: studentRelationship.id,
       student1Id: studentRelationship.student1Id,
@@ -71,15 +79,16 @@ export const getStudents = async (): Promise<
 > => {
   let roomStudents: StudentRoom[] = [];
   const studentRoomTable: StudentRoomTable[] = await getStudentRoomTable();
+  const studentTableJSON: Student[] = StudentTableJSON;
+  const roomTableJSON: Room[] = RoomTableJSON;
 
   studentRoomTable.forEach(studentRoom => {
-    const studentIndex = StudentTableJSON.findIndex((student) => student.id === studentRoom.studentId);
-    const roomIndex = RoomTableJSON.findIndex((room) => room.id === studentRoom.roomId);
-
+    const studentIndex = studentTableJSON.findIndex((student) => student.id === studentRoom.studentId);
+    const roomIndex = roomTableJSON.findIndex((room) => room.id === studentRoom.roomId);
     roomStudents.push({
       id: studentRoom.id,
-      student: StudentTableJSON[studentIndex],
-      room: RoomTableJSON[roomIndex]
+      student: studentTableJSON[studentIndex],
+      room: roomTableJSON[roomIndex]
     })
   });
 
@@ -88,12 +97,14 @@ export const getStudents = async (): Promise<
 
 export const getStudentRelationships = async (studentId: string): Promise<Relationship[]> => {
   let relationships: Relationship[] = [];
+  const studentRelationshipTableJSON: StudentRelationshipTable[] = StudentRelationshipTableJSON;
+  const studentTableJSON: Student[] = StudentTableJSON;
 
-  const studentRelationships: StudentRelationshipTable[] = StudentRelationshipTableJSON.filter(
+  const studentRelationships: StudentRelationshipTable[] = studentRelationshipTableJSON.filter(
     studentRelationship => studentRelationship.student1Id === studentId);
 
   studentRelationships.forEach(studentRelationship => {
-    const studentFound: Student | undefined = StudentTableJSON.find(student => studentRelationship.student2Id === student.id);
+    const studentFound: Student | undefined = studentTableJSON.find(student => studentRelationship.student2Id === student.id);
     if (studentFound) {
       relationships.push({
         id: studentRelationship.id,
@@ -107,11 +118,13 @@ export const getStudentRelationships = async (studentId: string): Promise<Relati
 };
 
 export const getStudentsByRoom = async (roomId: string): Promise<StudentsByRoom> => {
+  const studentRoomTableJSON: StudentRoomTable[] = StudentRoomTableJSON;
+  const studentsRoom: StudentRoomTable[] = studentRoomTableJSON.filter(studentRoom => studentRoom.roomId === roomId);
+  const studentTableJSON: Student[] = StudentTableJSON;
 
-  const studentsRoom: StudentRoomTable[] = StudentRoomTableJSON.filter(studentRoom => studentRoom.roomId === roomId);
   let students: Student[] = [];
   studentsRoom.forEach(studentRoom => {
-    const studentFound = StudentTableJSON.find(student => studentRoom.studentId === student.id);
+    const studentFound = studentTableJSON.find(student => studentRoom.studentId === student.id);
     if (studentFound)
       students.push(studentFound);
   });
