@@ -57,7 +57,10 @@ export default function StudentTable() {
   };
 
   const handleEdit = async (editedStudent: Student) => {
-    await axios.put(BASE + API_STUDENTS + editedStudent._id, editedStudent);
+    await axios.put(BASE + API_STUDENTS + editedStudent._id, {
+      name: editedStudent.name,
+      surname: editedStudent.surname
+    });
     handleCloseStudentModal();
     setStudents(prevStudents => prevStudents.map(student => {
       if (student._id === editedStudent._id) {
@@ -69,7 +72,10 @@ export default function StudentTable() {
   }
 
   const handleSave = async (newStudent: Student) => {
-    const studentResponse = await axios.post(BASE + API_STUDENTS, newStudent);
+    const studentResponse = await axios.post(BASE + API_STUDENTS, {
+      name: newStudent.name,
+      surname: newStudent.surname
+    });
     handleCloseStudentModal();
     setStudents(prevStudents => [...prevStudents, studentResponse.data]);
   }
