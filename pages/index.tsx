@@ -54,7 +54,7 @@ export default function Index({ rooms }: Props) {
 }
 
 export const getStaticProps: GetStaticProps<Props> = async (): Promise<GetStaticPropsResult<Props>> => {
-  const roomsResponse = await axios.get(BASE+API_ROOMS);
+  const roomsResponse = await axios.get("https://rather-school-app-production.up.railway.app/api/room/");
   const rooms = roomsResponse.data;
   
   return {

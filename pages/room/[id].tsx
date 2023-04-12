@@ -65,7 +65,7 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }:
   GetStaticPropsContext): Promise<GetStaticPropsResult<Props>> => {
 
   const { id } = params as { id: string };
-  const studentsByRoomResponse = await axios.get(BASE + API_STUDENTS_BY_ROOM + id);
+  const studentsByRoomResponse = await axios.get("https://rather-school-app-production.up.railway.app/api/student-room/room/" + id);
   const students = studentsByRoomResponse.data;
 
   return {
