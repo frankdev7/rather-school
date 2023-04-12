@@ -5,11 +5,11 @@ import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import { Room, RoomColumn } from "@/types";
 import axios from "axios";
-import RoomModal from "../../modal/room/RoomModal";
-import { v4 as uuidv4 } from 'uuid';
 import Constants from "../../../../util";
+import { API_ROOMS, BASE } from "@/routes";
+import RoomModal from "../../modal/room/RoomModal";
 
-export default function RoomsTable() {
+export default function RoomTable() {
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -28,8 +28,8 @@ export default function RoomsTable() {
   }, []);
 
   const getRooms = async () => {
-    const rooms = await axios.post("/api/rooms");
-    setRooms(rooms.data);
+    const roomsResponse = await axios.get(BASE + API_ROOMS);
+    setRooms(roomsResponse.data);
   }
 
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -43,7 +43,7 @@ export default function RoomsTable() {
 
   const handleOpenAddModal = () => {
     setAction(Constants.SAVE);
-    setEditingRoom({ id: '', name: '', description: '' });
+    setEditingRoom({ _id: '', name: '', description: '' });
   }
 
   const handleOpenEditRoomModal = (room: Room) => {
@@ -57,10 +57,10 @@ export default function RoomsTable() {
   };
 
   const handleEdit = async (editedRoom: Room) => {
-    await axios.put("/api/room/edit?id=" + editedRoom.id, editedRoom);
+    await axios.put(BASE + API_ROOMS + editedRoom._id, editedRoom);
     handleCloseRoomModal();
     setRooms(prevRooms => prevRooms.map(room => {
-      if (room.id === editedRoom.id) {
+      if (room._id === editedRoom._id) {
         return editedRoom;
       } else {
         return room;
@@ -69,17 +69,16 @@ export default function RoomsTable() {
   }
 
   const handleSave = async (newRoom: Room) => {
-    newRoom.id = uuidv4();
-    await axios.post("/api/room/add", newRoom);
+    const roomResponse = await axios.post(BASE + API_ROOMS, newRoom);
     handleCloseRoomModal();
-    setRooms(prevRooms => [...prevRooms, newRoom]);
+    setRooms(prevRooms => [...prevRooms, roomResponse.data]);
   }
 
   const handleDelete = async (id: string) => {
-    await axios.delete("/api/room/delete?id=" + id);
+    await axios.delete(BASE + API_ROOMS + id);
     handleCloseRoomModal();
     setRooms(prevRooms =>
-      prevRooms.filter(room => room.id !== id)
+      prevRooms.filter(room => room._id !== id)
     );
   }
 
@@ -116,7 +115,7 @@ export default function RoomsTable() {
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((room, i) => {
                     return (
-                      <TableRow hover role="checkbox" tabIndex={-1} key={room.id}>
+                      <TableRow hover role="checkbox" tabIndex={-1} key={room._id}>
                         <TableCell align="left">
                           {i + 1}
                         </TableCell>
@@ -132,7 +131,7 @@ export default function RoomsTable() {
                           </Button>
                         </TableCell>
                         <TableCell>
-                          <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => handleDelete(room.id)}>
+                          <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => handleDelete(room._id)}>
                             Delete
                           </Button>
                         </TableCell>

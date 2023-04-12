@@ -1,15 +1,16 @@
 import Head from 'next/head'
 import { GetStaticProps, GetStaticPropsContext, GetStaticPropsResult } from 'next'
-import { Student, StudentsByRoom } from '@/types'
+import { Student } from '@/types'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import Navbar from '../components/navbar/Navbar'
 import PageTitle from '../components/PageTitle'
 import { Container, Grid } from '@mui/material'
 import BasicCard from '../components/BasicCard'
-import { getStudentsByRoom } from '../api/utils'
-import { createTheme, ThemeProvider, } from '@mui/material/styles';
-import { ratherThemeOptions } from '../../ratherThemeOptions';
+import { createTheme, ThemeProvider, } from '@mui/material/styles'
+import { ratherThemeOptions } from '../../ratherThemeOptions'
+import axios from 'axios'
+import { API_STUDENTS_BY_ROOM, BASE } from '@/routes'
 
 const theme = createTheme(ratherThemeOptions);
 
@@ -38,9 +39,9 @@ export default function RoomPage({ students }: Props) {
             {students &&
               students.map((student) => {
                 return (
-                  <Grid item key={student.id} xs={12} sm={6} md={4}>
-                    <Link href={{ pathname: "/student/[id]", query: { id: student.id, name: student.name, surname: student.surname } }}>
-                      <BasicCard id={student.id} title={student.name} description={student.surname} textButton="Get Relationships" />
+                  <Grid item key={student._id} xs={12} sm={6} md={4}>
+                    <Link href={{ pathname: "/student/[id]", query: { id: student._id, name: student.name, surname: student.surname } }}>
+                      <BasicCard id={student._id} title={student.name} description={student.surname} textButton="Get Relationships" />
                     </Link>
                   </Grid>
                 )
@@ -62,11 +63,14 @@ export async function getStaticPaths() {
 
 export const getStaticProps: GetStaticProps<Props> = async ({ params }:
   GetStaticPropsContext): Promise<GetStaticPropsResult<Props>> => {
+
   const { id } = params as { id: string };
-  const studentsByRoom: StudentsByRoom = await getStudentsByRoom(id);
+  const studentsByRoomResponse = await axios.get(BASE + API_STUDENTS_BY_ROOM + id);
+  const students = studentsByRoomResponse.data;
+
   return {
     props: {
-      students: studentsByRoom.students
+      students
     }
   };
 }

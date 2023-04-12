@@ -1,65 +1,34 @@
 export interface Room {
-  id: string;
+  _id: string;
   name: string;
   description: string;
 }
 
-export interface StudentRoomTable {
-  id: string;
-  studentId: string;
-  roomId: string;
-}
-
-export interface StudentRelationshipTable {
-  id: string;
-  student1Id: string;
-  student2Id: string;
-  relationshipType: string;
-}
-
 export interface StudentRoom {
-  id: string;
+  _id: string;
   student: Student;
   room: Room;
 }
-
-export interface StudentRoomDetail {
-  id: string;
-  name: string;
-  surname: string;
-  roomName: string;
-}
-
-export interface RoomStudents {
-  id: string;
-  students: Student[];
-}
-
 export interface Student {
-  id: string;
+  _id: string;
   name: string;
   surname: string;
 }
-
-export interface StudentsByRoom {
-  roomId: string;
-  students: Student[];
-}
-export interface StudentRelationship {
-  id: string;
-  name: string;
-  surname: string;
-  relationships: Relationship[];
-}
-
 export interface Relationship {
-  id: string,
-  student: Student;
-  relationshipType: string;
+  _id: string,
+  student1: Student;
+  student2: Student;
+  relationship: string;
 }
 
 export interface RoomColumn {
   id: 'id' | 'name' | 'description';
+  label: string;
+  minWidth?: number;
+  align?: 'right';
+}
+export interface StudentColumn {
+  id: 'id' | 'name' | 'surname';
   label: string;
   minWidth?: number;
   align?: 'right';

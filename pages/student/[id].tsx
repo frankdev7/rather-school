@@ -1,7 +1,6 @@
 import Head from 'next/head'
 import { GetStaticProps, GetStaticPropsContext, GetStaticPropsResult } from 'next'
 import { Relationship } from '@/types'
-import { getStudentRelationships } from '../api/utils'
 import { useRouter } from 'next/router'
 import PageTitle from '../components/PageTitle'
 import Navbar from '../components/navbar/Navbar'
@@ -9,6 +8,8 @@ import { Container, Grid } from '@mui/material'
 import BasicCard from '../components/BasicCard'
 import { createTheme, ThemeProvider, } from '@mui/material/styles';
 import { ratherThemeOptions } from '../../ratherThemeOptions';
+import axios from 'axios'
+import { API_STUDENTS_RELATIONSHIP, BASE } from '@/routes'
 
 const theme = createTheme(ratherThemeOptions);
 
@@ -36,13 +37,13 @@ export default function StudentPage({ relationships }: Props) {
         <Container sx={{ py: 8 }} maxWidth="md">
           <Grid container spacing={4}>
             {
-              relationships && relationships.map((relationship) => {
+              relationships && relationships.map((relationshipItem) => {
                 return (
-                  <Grid item key={relationship.id} xs={12} sm={6} md={4}>
+                  <Grid item key={relationshipItem._id} xs={12} sm={6} md={4}>
                     <BasicCard
-                      id={relationship.id}
-                      title={`${relationship.student.name}, ${relationship.student.surname}`}
-                      description={relationship.relationshipType}
+                      id={relationshipItem._id}
+                      title={`${relationshipItem.student2.name}, ${relationshipItem.student2.surname}`}
+                      description={relationshipItem.relationship}
                       textButton="" />
                   </Grid>
                 )
@@ -62,9 +63,11 @@ export async function getStaticPaths() {
   }
 }
 
-export const getStaticProps: GetStaticProps<Props> = async ({ params }: GetStaticPropsContext): Promise<GetStaticPropsResult<Props>> => {
+export const getStaticProps: GetStaticProps<Props> = async ({ params }: GetStaticPropsContext):
+  Promise<GetStaticPropsResult<Props>> => {
   const { id } = params as { id: string };
-  const relationships: Relationship[] = await getStudentRelationships(id);
+  const studentsByRoomResponse = await axios.get(BASE + API_STUDENTS_RELATIONSHIP + id);
+  const relationships = studentsByRoomResponse.data;
   return {
     props: {
       relationships

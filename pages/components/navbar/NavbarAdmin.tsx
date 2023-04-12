@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Link from 'next/link';
 
-export default function Navbar() {
+export default function NavbarAdmin() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" color='primary'>
@@ -14,6 +14,21 @@ export default function Navbar() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             <Link href="/">
               Rather School
+            </Link>
+          </Typography>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            <Link href="/admin/room">
+              Rooms
+            </Link>
+          </Typography>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            <Link href="/admin/student">
+              Students
+            </Link>
+          </Typography>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            <Link href="/admin/student-room">
+              Student Room
             </Link>
           </Typography>
           <Button color="inherit">

@@ -1,22 +1,22 @@
 import { Button, Container, Modal, Paper, SelectChangeEvent, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
-import { Room, StudentRoom, StudentRoomColumn } from "@/types";
+import { Room, Student, StudentRoom, StudentRoomColumn } from "@/types";
 import axios from "axios";
-import { v4 as uuidv4 } from 'uuid';
 import Constants from "../../../../util";
-import StudentModal from "../../modal/student/StudentModal";
+import { API_ROOMS, API_STUDENTS, API_STUDENTS_ROOMS, API_STUDENTS_ROOMS_DETAIL, BASE } from "@/routes";
+import StudentRoomModal from "../../modal/student-room/StudentRoomModal";
 
-export default function StudentsTable() {
+export default function StudentsRoomTable() {
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [studentsRoom, setStudentsRoom] = useState<StudentRoom[]>([]);
   const [rooms, setRooms] = useState<Room[]>([]);
   const [room, setRoom] = useState<string>("");
-  const [editingStudentRoom, setEditingStudentRoom] = useState<StudentRoom | null>(null);
+  const [students, setStudents] = useState<Student[]>([]);
+  const [student, setStudent] = useState<string>("");
   const [action, setAction] = useState<string>("");
 
   const columns: readonly StudentRoomColumn[] = [
@@ -29,18 +29,22 @@ export default function StudentsTable() {
   useEffect(() => {
     getStudentsByRoom();
     getRooms();
+    getStudents();
   }, []);
 
   const getStudentsByRoom = async () => {
-    const response = await axios.get("/api/allstudents");
-    const studentsRoomRs: StudentRoom[] = response.data;
-    setStudentsRoom(studentsRoomRs);
+    const responseStudentsRoomsResponse = await axios.get(BASE + API_STUDENTS_ROOMS_DETAIL);
+    setStudentsRoom(responseStudentsRoomsResponse.data);
   }
 
-
   const getRooms = async () => {
-    const rooms = await axios.post("/api/rooms");
-    setRooms(rooms.data);
+    const roomsResponse = await axios.get(BASE + API_ROOMS);
+    setRooms(roomsResponse.data);
+  }
+
+  const getStudents = async () => {
+    const studentsResponse = await axios.get(BASE + API_STUDENTS);
+    setStudents(studentsResponse.data);
   }
 
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -54,80 +58,46 @@ export default function StudentsTable() {
 
   const handleOpenAddModal = () => {
     setAction(Constants.SAVE);
-    setRoom(rooms[0].id)
-    setEditingStudentRoom({ id: '', student: { id: '', name: '', surname: '' }, room: { id: room, name: '', description: '' } });
+    setRoom(rooms[0]._id)
+    setStudent(students[0]._id)
   }
-
-  const handleOpenEditStudentRoomModal = (studentRoom: StudentRoom) => {
-    setAction(Constants.EDIT);
-    setEditingStudentRoom(studentRoom);
-    setRoom(studentRoom.room.id)
-  };
 
   const handleCloseRoomModal = () => {
     setAction("");
-    setEditingStudentRoom(null);
   };
 
-  const handleRoomChange = (event: SelectChangeEvent) => {
+  const handleSave = async (studentId: string, roomId: string) => {
+    const studentRoomResponse = await axios.post(BASE + API_STUDENTS_ROOMS, {
+      studentId,
+      roomId
+    });
+    handleCloseRoomModal();
+    setStudentsRoom(prevStudentsRoom =>
+      [...prevStudentsRoom, studentRoomResponse.data]
+    )
+  }
+
+  const handleDelete = async (studentRoomId: string) => {
+    await axios.delete(BASE + API_STUDENTS_ROOMS + studentRoomId);
+    handleCloseRoomModal();
+    setStudentsRoom(prevStudentsRoom =>
+      prevStudentsRoom.filter(studentRoom => studentRoom._id !== studentRoomId)
+    );
+  }
+
+  const handleSelectRoomChange = (event: SelectChangeEvent) => {
     setRoom(event.target.value);
   };
 
-  const handleEdit = async (editedStudentRoom: StudentRoom) => {
-    await axios.put("/api/student/edit?id=" + editedStudentRoom.id, {
-      student: editedStudentRoom.student,
-      roomId: room
-    });
-    const roomIndex = rooms.findIndex(roomItem => roomItem.id === room)
-    handleCloseRoomModal();
-    setStudentsRoom(prevStudentsRoom =>
-      prevStudentsRoom.map(studentsRoom => {
-        if (studentsRoom.id === editedStudentRoom.id) {
-          return {
-            id: studentsRoom.id,
-            student: editedStudentRoom.student,
-            room: rooms[roomIndex]
-          };
-        } else {
-          return studentsRoom;
-        }
-      }));
-  }
-
-
-  const handleSave = async (newStudentRoom: StudentRoom) => {
-    newStudentRoom.id = uuidv4();
-    newStudentRoom.student.id = uuidv4();
-
-    await axios.post("/api/student/add", {
-      id: newStudentRoom.id,
-      student: newStudentRoom.student,
-      roomId: room
-    });
-
-    handleCloseRoomModal();
-    const roomFound: Room | undefined = rooms.find(roomItem => roomItem.id === room)
-    if (roomFound)
-      setStudentsRoom(prevStudentsRoom =>
-        [...prevStudentsRoom, { id: newStudentRoom.id, student: newStudentRoom.student, room: roomFound }]
-      )
-  }
-
-
-  const handleDelete = async (studentId: string) => {
-    await axios.delete("/api/student/delete?id=" + studentId);
-    handleCloseRoomModal();
-    setStudentsRoom(prevStudentsRoom =>
-      prevStudentsRoom.filter(studentRoom => studentRoom.student.id !== studentId)
-
-    );
-  }
+  const handleSelectStudentChange = (event: SelectChangeEvent) => {
+    setStudent(event.target.value);
+  };
 
   return (
     <Container sx={{ py: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }} maxWidth="lg">
 
       <Typography variant="h4" gutterBottom>
-        Students
+        Student Rooms
       </Typography>
 
       <Button variant="outlined" startIcon={<AddIcon />} sx={{ my: 4 }} onClick={() => handleOpenAddModal()}>
@@ -156,7 +126,7 @@ export default function StudentsTable() {
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((studentRoom, i) => {
                     return (
-                      <TableRow hover role="checkbox" tabIndex={-1} key={studentRoom.id}>
+                      <TableRow hover role="checkbox" tabIndex={-1} key={studentRoom._id}>
                         <TableCell align="left">
                           {i + 1}
                         </TableCell>
@@ -170,12 +140,7 @@ export default function StudentsTable() {
                           {studentRoom.room.name}
                         </TableCell>
                         <TableCell>
-                          <Button variant="outlined" startIcon={<EditIcon />} onClick={() => handleOpenEditStudentRoomModal(studentRoom)}>
-                            Edit
-                          </Button>
-                        </TableCell>
-                        <TableCell>
-                          <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => handleDelete(studentRoom.student.id)}>
+                          <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => handleDelete(studentRoom._id)}>
                             Delete
                           </Button>
                         </TableCell>
@@ -196,27 +161,17 @@ export default function StudentsTable() {
           />
         </Paper>
       }
-      <StudentModal
-        title="Edit Student"
-        open={action === Constants.EDIT}
-        editingStudentRoom={editingStudentRoom}
-        setEditingStudentRoom={setEditingStudentRoom}
-        handleCloseRoomModal={handleCloseRoomModal}
-        handleSave={handleEdit}
-        room={room}
-        rooms={rooms}
-        handleRoomChange={handleRoomChange}
-      />
-      <StudentModal
-        title="Add Student"
+      <StudentRoomModal
+        title="Add Student Room"
         open={action === Constants.SAVE}
-        editingStudentRoom={editingStudentRoom}
-        setEditingStudentRoom={setEditingStudentRoom}
         handleCloseRoomModal={handleCloseRoomModal}
         handleSave={handleSave}
         room={room}
         rooms={rooms}
-        handleRoomChange={handleRoomChange}
+        student={student}
+        students={students}
+        handleSelectStudentChange={handleSelectStudentChange}
+        handleSelectRoomChange={handleSelectRoomChange}
       />
     </Container>
   );

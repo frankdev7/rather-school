@@ -1,17 +1,16 @@
 import Head from 'next/head'
 import { GetStaticProps, GetStaticPropsResult } from 'next'
-import Navbar from './components/navbar/Navbar'
-import RoomsTable from './components/table/room/RoomsTable'
-import StudentsTable from './components/table/student/StudentsTable'
 import { createTheme, ThemeProvider, } from '@mui/material/styles'
-import { ratherThemeOptions } from '../ratherThemeOptions'
+import { ratherThemeOptions } from '../../ratherThemeOptions'
+import NavbarAdmin from '../components/navbar/NavbarAdmin'
+import RoomTable from '../components/table/room/RoomTable'
 
 const theme = createTheme(ratherThemeOptions);
 
 interface Props {
 }
 
-export default function Admin() {
+export default function Room() {
   return (
     <ThemeProvider theme={theme}>
       <Head>
@@ -20,17 +19,15 @@ export default function Admin() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Navbar />
+      <NavbarAdmin />
       <main>
-        <RoomsTable />
-        <StudentsTable />
+        <RoomTable />
       </main>
     </ThemeProvider >
   )
 }
 
 export const getStaticProps: GetStaticProps<Props> = async (): Promise<GetStaticPropsResult<Props>> => {
-  // const rooms = await getRooms();
   return {
     props: {
     }

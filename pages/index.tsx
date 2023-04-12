@@ -7,9 +7,10 @@ import Footer from './components/footer/Footer'
 import BasicCard from './components/BasicCard'
 import { Container, Grid } from '@mui/material'
 import PageTitle from './components/PageTitle'
-import { getRoomsTable } from './api/utils'
 import { createTheme, ThemeProvider, } from '@mui/material/styles'
 import { ratherThemeOptions } from '../ratherThemeOptions'
+import axios from 'axios'
+import { API_ROOMS, BASE } from '@/routes'
 
 const theme = createTheme(ratherThemeOptions);
 
@@ -36,9 +37,9 @@ export default function Index({ rooms }: Props) {
             {
               rooms.map((room) => {
                 return (
-                  <Grid item key={room.id} xs={12} sm={6} md={4}>
-                    <Link href={{ pathname: "/room/[id]", query: { id: room.id, name: room.name, description: room.description } }}>
-                      <BasicCard id={room.id} title={room.name} description={room.description} textButton="Get Students" />
+                  <Grid item key={room._id} xs={12} sm={6} md={4}>
+                    <Link href={{ pathname: "/room/[id]", query: { id: room._id, name: room.name, description: room.description } }}>
+                      <BasicCard id={room._id} title={room.name} description={room.description} textButton="Get Students" />
                     </Link>
                   </Grid>
                 )
@@ -53,8 +54,9 @@ export default function Index({ rooms }: Props) {
 }
 
 export const getStaticProps: GetStaticProps<Props> = async (): Promise<GetStaticPropsResult<Props>> => {
-  const rooms = await getRoomsTable();
-
+  const roomsResponse = await axios.get(BASE+API_ROOMS);
+  const rooms = roomsResponse.data;
+  
   return {
     props: {
       rooms
