@@ -47,7 +47,6 @@ export default function Index() {
               rooms && rooms.map((room) => {
                 return (
                   <Grid item key={room._id} xs={12} sm={6} md={4}>
-                    {room._id}
                     <Link href={{ pathname: "/room/[page]", query: { page: room.name.toLowerCase(), id: room._id, name: room.name, description: room.description } }}>
                       <BasicCard id={room._id} title={room.name} description={room.description} textButton="Get Students" />
                     </Link>
