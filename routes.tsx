@@ -1,4 +1,4 @@
-export const BASE = "http://127.0.0.1:3001";
+export const BASE = "https://rather-school-app-production.up.railway.app";
 export const API_ROOMS = "/api/room/"
 export const API_STUDENTS = "/api/student/"
 export const API_STUDENTS_ROOMS = "/api/student-room/"
