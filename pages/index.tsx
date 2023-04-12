@@ -1,5 +1,4 @@
 import Head from 'next/head'
-import { GetStaticProps, GetStaticPropsResult } from 'next'
 import { Room } from '@/types'
 import Link from 'next/link'
 import Navbar from './components/navbar/Navbar'
@@ -11,14 +10,24 @@ import { createTheme, ThemeProvider, } from '@mui/material/styles'
 import { ratherThemeOptions } from '../ratherThemeOptions'
 import axios from 'axios'
 import { API_ROOMS, BASE } from '@/routes'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 
 const theme = createTheme(ratherThemeOptions);
 
-interface Props {
-  rooms: Room[];
-}
+export default function Index() {
 
-export default function Index({ rooms }: Props) {
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const router = useRouter();
+
+  useEffect(() => {
+    getRooms();
+  }, []);
+
+  const getRooms = async () => {
+    const roomsResponse = await axios.get(BASE + API_ROOMS);
+    setRooms(roomsResponse.data);
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -35,10 +44,11 @@ export default function Index({ rooms }: Props) {
         <Container sx={{ py: 8 }} maxWidth="md">
           <Grid container spacing={4}>
             {
-              rooms.map((room) => {
+              rooms && rooms.map((room) => {
                 return (
                   <Grid item key={room._id} xs={12} sm={6} md={4}>
-                    <Link href={{ pathname: "/room/[id]", query: { id: room._id, name: room.name, description: room.description } }}>
+                    {room._id}
+                    <Link href={{ pathname: "/room/[page]", query: { page: room.name.toLowerCase(), id: room._id, name: room.name, description: room.description } }}>
                       <BasicCard id={room._id} title={room.name} description={room.description} textButton="Get Students" />
                     </Link>
                   </Grid>
@@ -52,15 +62,3 @@ export default function Index({ rooms }: Props) {
     </ThemeProvider >
   )
 }
-
-export const getStaticProps: GetStaticProps<Props> = async (): Promise<GetStaticPropsResult<Props>> => {
-  const roomsResponse = await axios.get("https://rather-school-app-production.up.railway.app/api/room/");
-  const rooms = roomsResponse.data;
-  
-  return {
-    props: {
-      rooms
-    }
-  };
-}
-

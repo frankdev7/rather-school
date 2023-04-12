@@ -11,6 +11,7 @@ import { createTheme, ThemeProvider, } from '@mui/material/styles'
 import { ratherThemeOptions } from '../../ratherThemeOptions'
 import axios from 'axios'
 import { API_STUDENTS_BY_ROOM, BASE } from '@/routes'
+import { useEffect, useState } from 'react'
 
 const theme = createTheme(ratherThemeOptions);
 
@@ -18,9 +19,21 @@ interface Props {
   students: Student[];
 }
 
-export default function RoomPage({ students }: Props) {
+export default function RoomPage() {
+
+  const [students, setStudents] = useState<Student[]>([]);
   const router = useRouter();
-  const { name, description } = router.query as { name: string, description: string };
+  const { id, name, description } = router.query as { id: string, name: string, description: string };
+
+  useEffect(() => {
+    if (id !== undefined)
+      getStudents();
+  }, [id]);
+
+  const getStudents = async () => {
+    const studentsResponse = await axios.get(BASE + API_STUDENTS_BY_ROOM + id);
+    setStudents(studentsResponse.data);
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -37,10 +50,10 @@ export default function RoomPage({ students }: Props) {
         <Container sx={{ py: 8 }} maxWidth="md">
           <Grid container spacing={4}>
             {students &&
-              students.map((student) => {
+              students.map((student, i) => {
                 return (
                   <Grid item key={student._id} xs={12} sm={6} md={4}>
-                    <Link href={{ pathname: "/student/[id]", query: { id: student._id, name: student.name, surname: student.surname } }}>
+                    <Link href={{ pathname: "/student/[number]", query: { number: i+1, id: student._id, name: student.name, surname: student.surname } }}>
                       <BasicCard id={student._id} title={student.name} description={student.surname} textButton="Get Relationships" />
                     </Link>
                   </Grid>
@@ -64,13 +77,9 @@ export async function getStaticPaths() {
 export const getStaticProps: GetStaticProps<Props> = async ({ params }:
   GetStaticPropsContext): Promise<GetStaticPropsResult<Props>> => {
 
-  const { id } = params as { id: string };
-  const studentsByRoomResponse = await axios.get("https://rather-school-app-production.up.railway.app/api/student-room/room/" + id);
-  const students = studentsByRoomResponse.data;
-
   return {
     props: {
-      students
+      students: []
     }
   };
 }

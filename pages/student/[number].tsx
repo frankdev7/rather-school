@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import { GetStaticProps, GetStaticPropsContext, GetStaticPropsResult } from 'next'
-import { Relationship } from '@/types'
+import { Relationship, Student } from '@/types'
 import { useRouter } from 'next/router'
 import PageTitle from '../components/PageTitle'
 import Navbar from '../components/navbar/Navbar'
@@ -10,6 +10,7 @@ import { createTheme, ThemeProvider, } from '@mui/material/styles';
 import { ratherThemeOptions } from '../../ratherThemeOptions';
 import axios from 'axios'
 import { API_STUDENTS_RELATIONSHIP, BASE } from '@/routes'
+import { useEffect, useState } from 'react'
 
 const theme = createTheme(ratherThemeOptions);
 
@@ -17,9 +18,23 @@ interface Props {
   relationships: Relationship[];
 }
 
-export default function StudentPage({ relationships }: Props) {
+export default function StudentPage() {
   const router = useRouter();
-  const { name, surname } = router.query as { name: string, surname: string };
+  const [relationships, setRelationships] = useState<Relationship[]>([]);
+  const { id, name, surname } = router.query as { id: string, name: string, surname: string };
+
+
+  useEffect(() => {
+    if (id !== undefined)
+      getRelationships();
+  }, [id]);
+
+  const getRelationships = async () => {
+    const studentsResponse = await axios.get(BASE + API_STUDENTS_RELATIONSHIP + id);
+    setRelationships(studentsResponse.data);
+  }
+
+
   return (
     <ThemeProvider theme={theme}>
       <Head>
@@ -65,12 +80,10 @@ export async function getStaticPaths() {
 
 export const getStaticProps: GetStaticProps<Props> = async ({ params }: GetStaticPropsContext):
   Promise<GetStaticPropsResult<Props>> => {
-  const { id } = params as { id: string };
-  const studentsByRoomResponse = await axios.get("https://rather-school-app-production.up.railway.app/api/student-room/detail/" + id);
-  const relationships = studentsByRoomResponse.data;
+  
   return {
     props: {
-      relationships
+      relationships: []
     }
   };
 }
